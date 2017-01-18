@@ -46,4 +46,8 @@ def spectrogram(N, M, H, Fs, data):
                 STFT[:,i] = FFT[::-1]
         start = start + H
 
-    return STFT
+    t = np.linspace(0, 1./Fs * (len(data)-1), len(data))
+    f = np.linspace(0, Fs/2., N/2)
+    f = f[::-1]
+
+    return t, f, STFT[len(f):N,:]
