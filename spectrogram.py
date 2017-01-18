@@ -2,11 +2,17 @@ import scipy.signal
 import numpy as np
 from numpy.fft import fft
 
-#   N: Frequency resolution; must be greater than block length M
-#   M: Block length
-#   H: Hop length
-#   Fs: Sampling frequency
-#   data: Audio data
+#   Arguments:
+#   N:      Frequency resolution; must be greater than block length M
+#   M:      Block length
+#   H:      Hop length
+#   Fs:     Sampling frequency
+#   data:   Audio data
+#
+#   Returns:
+#   t:      time vector
+#   f:      frequency vector
+#   STFT:   2-D array containing the magnitude of the STFT
 def spectrogram(N, M, H, Fs, data):
     start = 0
     end = 0
@@ -48,6 +54,5 @@ def spectrogram(N, M, H, Fs, data):
 
     t = np.linspace(0, 1./Fs * (len(data)-1), len(data))
     f = np.linspace(0, Fs/2., N/2)
-    f = f[::-1]
 
     return t, f, STFT[len(f):N,:]
