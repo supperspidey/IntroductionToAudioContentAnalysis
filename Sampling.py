@@ -15,26 +15,24 @@ t   = np.linspace(0, D, D/(1./Fs1))
 x1  = A * signal.chirp(t, f0, D, f1, method='linear')
 
 #   Compute the spectrogram, and plot the result
-Sxx1 = spectrogram(512, 200, 100, Fs1, x1)
+t_1, f_1, Sxx1 = spectrogram(512, 200, 100, Fs1, x1)
 
 plt.subplot(2, 1, 1)
-extent = [0, D, 0, Fs1]
-plt.imshow(Sxx1, extent=extent, aspect='auto')
+plt.imshow(Sxx1, extent=[t_1.min(), t_1.max(), f_1.min(), f_1.max()], aspect='auto')
 plt.xlabel('Time (s)')
 plt.ylabel('Frequency (Hz)')
 plt.title('Sampling Rate = 48 kHz')
 
 #   Generate the same sinesweep, but at only the fourth of the previous Fs
-Fs2     = 12000
-t       = np.linspace(0, D, D/(1./Fs2))
-x2      = A * signal.chirp(t, f0, D, f1, method='linear')
-Sxx2    = spectrogram(512, 200, 100, Fs2, x2)
+Fs2               = 12000
+t                 = np.linspace(0, D, D/(1./Fs2))
+x2                = A * signal.chirp(t, f0, D, f1, method='linear')
+t_2, f_2, Sxx2    = spectrogram(512, 200, 100, Fs2, x2)
 
 #   The plot will show the effect of aliasing -- aliases at multiples of
 #   the sampling frequency overlap with each other.
 plt.subplot(2, 1, 2)
-extent = [0, D, 0, Fs2]
-plt.imshow(Sxx2, extent=extent, aspect='auto')
+plt.imshow(Sxx2, extent=[t_2.min(), t_2.max(), f_2.min(), f_2.max()], aspect='auto')
 plt.xlabel('Time (s)')
 plt.ylabel('Frequency (Hz)')
 plt.title('Sampling Rate = 12 kHz')
