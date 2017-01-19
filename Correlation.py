@@ -79,3 +79,8 @@ ax2.tick_params('m', colors='r')
 
 fig.tight_layout()
 plt.show()
+
+#   There are two observations just by looking at the graph:
+#   1. The `Max vs Time` plot somewhat mirrors the audio signal.
+#   2. The huge spikes might have occurred where there exists fundamental
+#   frequencies.
