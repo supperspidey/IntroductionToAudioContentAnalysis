@@ -1,6 +1,6 @@
 import numpy as np
 from scipy import signal
-from spectrogram import spectrogram
+from Spectrogram import spectrogram
 import scipy.io.wavfile as wavfile
 import matplotlib.pyplot as plt
 
