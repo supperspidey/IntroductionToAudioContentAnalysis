@@ -1,5 +1,6 @@
 import numpy as np
 from abc import ABCMeta, abstractmethod
+from scipy import signal
 import matplotlib.pyplot as plt
 
 #   Define a general digital filter
@@ -26,7 +27,7 @@ class MovingAverageFilter(Filter):
         return self.b
 
     def frequency_response(self):
-        w = np.linspace(0, np.pi, 100)
+        w = np.linspace(0, np.pi - 0.01, 512)
         H = np.zeros(len(w), dtype=complex)
         for i in range(0, len(self.b)):
             H += self.b[i] * np.exp(-1j*w*i)
@@ -55,38 +56,32 @@ class SinglePoleFilter(Filter):
         return h
 
     def frequency_response(self):
-        w = np.linspace(0, np.pi, 100)
+        w = np.linspace(0, np.pi, 512)
         H = self.b / (self.a[0] + self.a[1]*np.exp(-1j*w))
         return w, H
 
-maf = MovingAverageFilter(30)
-h_maf = maf.impulse_response()
-plt.subplot(2, 2, 1)
-plt.stem(h_maf)
-plt.title('Impulse Response - Moving Average')
-
-w, H_maf = maf.frequency_response()
-plt.subplot(2, 2, 3)
-Hmag_maf = np.absolute(H_maf)
-plt.plot(w, Hmag_maf)
-plt.xlim([w.min(), w.max()])
-plt.xlabel('Frequency (Rad)')
-plt.ylabel('Gain')
+plt.subplot(2, 1, 1)
+for n in [2, 10, 50]:
+    maf = MovingAverageFilter(n)
+    w, H_maf = maf.frequency_response()
+    Hmag_maf = np.absolute(H_maf)
+    plt.plot(w, 20*np.log10(Hmag_maf))
+plt.xlim([0, np.pi])
+plt.legend(['J = 2', 'J = 10', 'J = 50'])
+plt.xlabel('Frequency (rad/sample)')
+plt.ylabel('Gain (dB)')
 plt.title('Magnitude Response - Moving Average')
 
-spf = SinglePoleFilter(0.4)
-h_spf = spf.impulse_response()
-plt.subplot(2, 2, 2)
-plt.stem(h_spf)
-plt.title('Impulse Response - Single-Pole')
-
-w, H_spf = spf.frequency_response()
-plt.subplot(2, 2, 4)
-Hmag_spf = np.absolute(H_spf)
-plt.plot(w, Hmag_spf)
-plt.xlim([w.min(), w.max()])
-plt.xlabel('Frequency (Rad)')
-plt.ylabel('Gain')
+plt.subplot(2, 1, 2)
+for alpha in [0.5, 0.9, 0.999]:
+    spf = SinglePoleFilter(alpha)
+    w, H_spf = spf.frequency_response()
+    Hmag_spf = np.absolute(H_spf)
+    plt.plot(w, 20*np.log10(Hmag_spf))
+plt.xlim([0, np.pi])
+plt.legend(['alpha = 0.5', 'alpha = 0.9', 'alpha = 0.999'])
+plt.xlabel('Frequency (rad/sample)')
+plt.ylabel('Gain (dB)')
 plt.title('Magnitude Response - Single-Pole')
 
 plt.tight_layout()
